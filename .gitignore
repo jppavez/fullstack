@@ -9,3 +9,5 @@ node_modules
 __pycache__
 .env
 .pytest_cache
+bin/
+lib/
