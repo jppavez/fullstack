@@ -13,6 +13,10 @@ class BooksToScrape():
 
     def getSoup(self, url):
         request = requests.get(url)
+
+        if request.status_code != 200:
+            raise Exception("Error fetching {}".format(url))
+
         soup = BeautifulSoup(request.text, "html.parser")
         return soup
 
@@ -62,7 +66,7 @@ class BooksToScrape():
             url = a_element['href']
             title = a_element['title']
 
-            BOOKS_RESULTS.append((title,  self.cleanUrl(CATEGORY_URL) + url))
+            BOOKS_RESULTS.append((title, self.cleanUrl(CATEGORY_URL) + url))
 
         if HAS_NEXT_PAGE:
             next_page_url = HAS_NEXT_PAGE.find('a')['href']
@@ -108,7 +112,8 @@ class BooksToScrape():
     def _parseThumbail(self, soup_book_info, book_url):
 
         clean_url = self.cleanUrl(book_url)
-        thumbnail = soup_book_info.find('div', {'id': 'product_gallery'}).find('img')['src']
+        thumbnail = soup_book_info.find(
+            'div', {'id': 'product_gallery'}).find('img')['src']
 
         return clean_url + thumbnail
 
