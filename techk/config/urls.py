@@ -14,13 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from django.contrib import admin
-from apps.base.views import index
-from apps.scraper.views import test
-
+from django.urls import path
+#from django.contrib import admin
+from apps.base.views import index, category_detail, book_detail
+from apps.scraper.views import scrap_main
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'', test),
+    #url(r'^admin/', admin.site.urls),
+    url(r'scrap', scrap_main),
+    path('', index, name='index'),
+    path('category/<int:category_id>', category_detail, name='category_detail'),
+    path('book/<int:book_id>', book_detail, name='book_detail'),
     url(r'^api-auth/', include('rest_framework.urls'))
 ]
