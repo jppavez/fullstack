@@ -14,11 +14,19 @@ def scrap_main(request):
     categories = scrap.getCategories()
 
     for name, url in categories:
+
+        # Verificar que categoria ya no exista
+        category_exist = Category.objects.get(name=name)
+        if category_exist:
+            continue
+
         category = Category.create(name=name)
 
         books = scrap.getBookFromCategory(url)
 
         for book in books:
+            book_name = book[0]
+
             book_info_url = book[1]
             title, upc, price, thumbnail, stock, stock_quantity, description = scrap.getBookInformation(
                 book_info_url)

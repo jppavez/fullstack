@@ -134,6 +134,12 @@ class BooksToScrape():
 
     def _parseProductDescription(self, soup_book_info):
         product_description = soup_book_info.find(
-            'div', {'id': 'product_description'}).find_next_siblings('p')
+            'div', {'id': 'product_description'})
+
+        if product_description:
+            product_description = product_description.find_next_siblings('p')
+
+        else:
+            return
 
         return product_description[0].text.strip()
