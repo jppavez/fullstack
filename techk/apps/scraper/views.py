@@ -16,7 +16,7 @@ def scrap_main(request):
     for name, url in categories:
 
         # Verificar que categoria ya no exista
-        category_exist = Category.objects.get(name=name)
+        category_exist = Category.objects.filter(name=name)
         if category_exist:
             continue
 
