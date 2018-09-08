@@ -9,15 +9,12 @@ from apps.base.models.Category import Category
 from apps.base.models.Book import Book
 
 
-def test(request):
+def scrap_main(request):
     scrap = BooksToScrape()
     categories = scrap.getCategories()
 
     for name, url in categories:
         category = Category.create(name=name)
-
-        if name != "Fantasy":
-            continue
 
         books = scrap.getBookFromCategory(url)
 
@@ -35,4 +32,4 @@ def test(request):
 
             category.books.add(book)
 
-    return JsonResponse(dict(categories))
+    return HttpResponse("SUCCESS")
