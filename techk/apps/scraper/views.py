@@ -30,6 +30,12 @@ def scrap_main(request):
             book_info_url = book[1]
             title, upc, price, thumbnail, stock, stock_quantity, description = scrap.getBookInformation(
                 book_info_url)
+
+            # UPC es unico
+            book_exist = Book.objects.filter(upc=upc)
+            if book_exist:
+                continue
+                
             book = Book.create(title=title,
                                upc=upc,
                                price=price,
