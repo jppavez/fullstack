@@ -1,0 +1,6 @@
+<h1>{{ category.name }}</h1>
+<ul>
+{% for book in category.books.all %}
+    <a href="{% url 'book_detail' book.id %}"><li>{{ book.title }}</li></a>
+{% endfor %}
+</ul>

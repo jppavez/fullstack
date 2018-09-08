@@ -1,0 +1,32 @@
+<h1>{{ book.title }}</h1>
+
+<img src="{{ book.thumbnail }}">
+
+<h3>Categories for this book</h3>
+<ul>
+{% for category in book.categories.all %}
+    <a href="{% url 'category_detail' category.id %}"><li>{{ category.name }}</li></a>
+{% endfor %}
+</ul>
+
+
+<table style="width:100%">
+  <tr>
+    <th>Title</th>
+    <th>UPC</th> 
+    <th>Price</th>
+    <th>Stock</th>
+    <th>Stock Quantity</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <th>{{ book.title }}</th>
+    <th>{{ book.upc }}</th> 
+    <th>{{ book.price }}</th>
+    <th>{{ book.stock}} </th>
+    <th>{{ book.stock_quantity }}</th>
+    <th>{{ book.description }}</th>
+  </tr>
+</table>
+
+
