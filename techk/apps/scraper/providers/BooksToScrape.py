@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 import re
 from urllib.parse import urlparse
@@ -33,7 +35,10 @@ class BooksToScrape():
 
         categories = soup.find('div', attrs={'class': 'side_categories'}).find_all('li')
 
-        for category in categories:
+        if len(categories) <= 1:
+            raise Exception("No categories")
+
+        for category in categories[1:]:
             category_a_element = category.find('a')
             name = category_a_element.text.strip()
             url = self.MAIN_URL + category_a_element['href']
@@ -66,23 +71,18 @@ class BooksToScrape():
 
         return BOOKS_RESULTS
 
-    def _getBookInformation(self, book_url):
+    def getBookInformation(self, book_url):
         BOOK_URL = book_url
         soup = self.getSoup(BOOK_URL)
 
         title = self._parseTitle(soup)
         upc = self._parseUPC(soup)
         price = self._parsePrice(soup)
-        thumbnail = self._parseThumbail(soup)
+        thumbnail = self._parseThumbail(soup, book_url)
         stock, stock_quantity = self._parseStock(soup)
         description = self._parseProductDescription(soup)
 
-        print(title)
-        print(price)
-        print(description)
-        print(upc)
-        print(thumbnail)
-        print(stock, stock_quantity)
+        return title, upc, price, thumbnail, stock, stock_quantity, description
 
     def _parseTitle(self, soup_book_info):
         product_main = soup_book_info.find('div', {'class': 'product_main'})
@@ -101,12 +101,16 @@ class BooksToScrape():
 
         price = product_main.find('p', {'class': 'price_color'}).text.strip()
 
+        price = "".join([p for p in price if p.isnumeric() or p == '.' or p == ','])
+
         return price
 
-    def _parseThumbail(self, soup_book_info):
+    def _parseThumbail(self, soup_book_info, book_url):
+
+        clean_url = self.cleanUrl(book_url)
         thumbnail = soup_book_info.find('div', {'id': 'product_gallery'}).find('img')['src']
 
-        return thumbnail
+        return clean_url + thumbnail
 
     def _parseStock(self, soup_book_info):
         stock = soup_book_info.find('th', text='Availability').find_next_siblings('td')
